@@ -30,24 +30,24 @@ config_integration.trace_integrations(['logging'])
 config_integration.trace_integrations(['requests'])
 # Standard Logging
 logger = logging.getLogger(__name__)
-handler = AzureLogHandler(connection_string='InstrumentationKey=[your-guid]')
+handler = AzureLogHandler(connection_string='InstrumentationKey=e689bc5e-5dec-4d9a-bb1d-21d721a7a14c')
 handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
 logger.addHandler(handler)
 # Logging custom Events 
-logger.addHandler(AzureEventHandler(connection_string='InstrumentationKey=[your-guid]'))
+logger.addHandler(AzureEventHandler(connection_string='InstrumentationKey=e689bc5e-5dec-4d9a-bb1d-21d721a7a14c'))
 # Set the logging level
 logger.setLevel(logging.INFO)
 
 # Metrics
 exporter = metrics_exporter.new_metrics_exporter(
     enable_standard_metrics=True,
-    connection_string='InstrumentationKey=f3d58ced-b7b3-4524-bd76-3f8576d095c1'
+    connection_string='InstrumentationKey=e689bc5e-5dec-4d9a-bb1d-21d721a7a14c'
 )
 
 # Tracing
 tracer = Tracer(
     exporter = AzureExporter(
-        connection_string = 'InstrumentationKey=f3d58ced-b7b3-4524-bd76-3f8576d095c1'),
+        connection_string = 'InstrumentationKey=e689bc5e-5dec-4d9a-bb1d-21d721a7a14c'),
     sampler = ProbabilitySampler(1.0),
 )
 
@@ -56,7 +56,7 @@ app = Flask(__name__)
 # Requests
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string='InstrumentationKey=f3d58ced-b7b3-4524-bd76-3f8576d095c1'),
+    exporter=AzureExporter(connection_string='InstrumentationKey=e689bc5e-5dec-4d9a-bb1d-21d721a7a14c'),
     sampler=ProbabilitySampler(rate=1.0),
 )
 
@@ -79,20 +79,21 @@ else:
     title = app.config['TITLE']
 
 # Redis Connection
+r = redis.Redis()
 # Redis configurations
-redis_server = os.environ['REDIS']
+# redis_server = os.environ['REDIS']
 
-# Redis Connection to another container
-try:
-   if "REDIS_PWD" in os.environ:
-      r = redis.StrictRedis(host=redis_server,
-                        port=6379,
-                        password=os.environ['REDIS_PWD'])
-   else:
-      r = redis.Redis(redis_server)
-   r.ping()
-except redis.ConnectionError:
-   exit('Failed to connect to Redis, terminating.')
+# # Redis Connection to another container
+# try:
+#    if "REDIS_PWD" in os.environ:
+#       r = redis.StrictRedis(host=redis_server,
+#                         port=6379,
+#                         password=os.environ['REDIS_PWD'])
+#    else:
+#       r = redis.Redis(redis_server)
+#    r.ping()
+# except redis.ConnectionError:
+#    exit('Failed to connect to Redis, terminating.')
    
 
 # Change title to host name to demo NLB
