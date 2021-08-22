@@ -51,6 +51,6 @@ echo "Verifying connection to $clusterName"
 
 kubectl get nodes
 
-# echo "Deploying to AKS cluster"
+echo "Deploying to AKS cluster"
 # The command below will deploy a standard application to your AKS cluster. 
-# kubectl apply -f azure-vote.yaml
+kubectl apply -f azure-vote.yaml
